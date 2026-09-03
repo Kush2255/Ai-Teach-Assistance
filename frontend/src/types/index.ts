@@ -1,22 +1,25 @@
 export interface LearnerProfile {
   name: string;
-  education_level: 'Beginner' | 'Intermediate' | 'Advanced';
+  education_level: 'Elementary' | 'High School' | 'Undergraduate' | 'Professional' | 'Self-Taught' | string;
   current_knowledge?: string;
-  learning_goal: string;
-  preferred_language: 'English' | 'Hindi' | 'Hinglish' | 'Telugu';
-  teaching_style: 'Simple & Friendly' | 'Visual' | 'Storytelling' | 'Technical' | 'Socratic' | 'Exam-focused';
+  learning_goal: 'Exam preparation' | 'Practical skill acquisition' | 'Foundational understanding' | 'Mastery' | string;
+  preferred_language: 'English' | 'Hindi' | 'Hinglish' | 'Telugu' | string;
+  teaching_style: 'Socratic' | 'First Principles' | 'Project-Based' | 'Storytelling' | 'Direct Instruction' | 'Simple & Friendly' | 'Visual' | 'Technical' | 'Exam-focused' | string;
   available_time: string;
-  desired_depth: 'Quick' | 'Balanced' | 'Deep';
+  desired_depth: 'High-level overview' | 'Deep dive' | 'Mastery' | 'Modular reference' | 'Quick' | 'Balanced' | 'Deep' | string;
 }
 
 export interface LessonSection {
   id: string;
   title: string;
   duration: number;
+  objective?: string;
   explanation?: string;
   concepts: string[];
+  guided_exercise?: string;
+  knowledge_check?: string;
   examples: string[];
-  visual_type: 'diagram' | 'equation' | 'graph' | 'code' | 'timeline' | 'concept_map';
+  visual_type: 'diagram' | 'equation' | 'graph' | 'code' | 'timeline' | 'concept_map' | 'process';
   visual_data?: any;
   question?: string;
   question_type: 'conceptual' | 'problem_solving' | 'mcq';
@@ -28,12 +31,24 @@ export interface LessonPlan {
   id: string;
   title: string;
   topic: string;
-  objective: string;
+  objective?: string;
+  overview?: string;
+  education_level?: string;
+  learning_goal?: string;
+  teaching_style?: string;
+  available_time?: string;
+  desired_depth?: string;
   estimated_minutes: number;
   difficulty: string;
   language: string;
   sections: LessonSection[];
+  next_steps?: {
+    immediate_action: string;
+    further_exploration: string[];
+  };
+  markdown_curriculum?: string;
 }
+
 
 export interface AnswerEvaluation {
   correct: boolean;

@@ -14,13 +14,13 @@ export const OnboardingPage: React.FC = () => {
 
   const [profile, setProfile] = useState<LearnerProfile>({
     name: 'Learner',
-    education_level: 'Beginner',
-    current_knowledge: 'Basic high school science',
-    learning_goal: 'Understand fundamentals',
+    education_level: 'Undergraduate',
+    current_knowledge: 'Foundational concepts and principles',
+    learning_goal: 'Foundational understanding',
     preferred_language: 'English',
-    teaching_style: 'Simple & Friendly',
-    available_time: '20 minutes',
-    desired_depth: 'Balanced',
+    teaching_style: 'Socratic',
+    available_time: '30 minutes',
+    desired_depth: 'Deep dive',
   });
 
   const handleFileUpload = async (file: File) => {
@@ -56,7 +56,9 @@ export const OnboardingPage: React.FC = () => {
           <Sparkles className="w-6 h-6 text-blue-400" />
           <span>Learner Setup & Personalization</span>
         </h1>
-        <p className="text-sm text-slate-400">Tailor your AI Educator to your exact learning goals, style, and time constraints.</p>
+        <p className="text-sm text-slate-400">
+          World-Class Educational Architect tailoring cognitive load, pedagogical style, and structured curriculum to your goals.
+        </p>
       </div>
 
       <form onSubmit={handleSubmit} className="glass-panel p-8 rounded-3xl space-y-8 border border-slate-800">
@@ -70,7 +72,7 @@ export const OnboardingPage: React.FC = () => {
             type="text"
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
-            placeholder="e.g. Machine Learning, Electricity & Ohm's Law, React Hooks"
+            placeholder="e.g. Electricity & Ohm's Law, Machine Learning, Quantum Computing, Microeconomics"
             className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 text-sm"
             required
           />
@@ -79,7 +81,7 @@ export const OnboardingPage: React.FC = () => {
           <div className="border-2 border-dashed border-slate-800 hover:border-blue-500/50 rounded-2xl p-6 text-center transition-all bg-slate-950/40">
             <Upload className="w-8 h-8 text-slate-500 mx-auto mb-2" />
             <p className="text-xs text-slate-300 font-medium">Upload Educational Material (PDF, DOCX, PPTX, TXT)</p>
-            <p className="text-[10px] text-slate-500 mt-1">Optional. Prioritizes uploaded content with citations.</p>
+            <p className="text-[10px] text-slate-500 mt-1">Optional. Ingests textbook chapters and lectures into RAG vector store.</p>
             <input
               type="file"
               accept=".pdf,.docx,.pptx,.txt"
@@ -108,9 +110,11 @@ export const OnboardingPage: React.FC = () => {
               onChange={(e: any) => setProfile({ ...profile, education_level: e.target.value })}
               className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-white text-sm focus:border-blue-500"
             >
-              <option value="Beginner">Beginner</option>
-              <option value="Intermediate">Intermediate</option>
-              <option value="Advanced">Advanced</option>
+              <option value="Elementary">Elementary School</option>
+              <option value="High School">High School</option>
+              <option value="Undergraduate">Undergraduate / College</option>
+              <option value="Professional">Professional / Industry</option>
+              <option value="Self-Taught">Self-Taught Enthusiast</option>
             </select>
           </div>
 
@@ -124,12 +128,10 @@ export const OnboardingPage: React.FC = () => {
               onChange={(e) => setProfile({ ...profile, learning_goal: e.target.value })}
               className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-white text-sm focus:border-blue-500"
             >
-              <option value="Understand fundamentals">Understand fundamentals</option>
+              <option value="Foundational understanding">Foundational understanding</option>
               <option value="Exam preparation">Exam preparation</option>
-              <option value="Interview preparation">Interview preparation</option>
-              <option value="Academic learning">Academic learning</option>
-              <option value="Practical skills">Practical skills</option>
-              <option value="Revision">Revision</option>
+              <option value="Practical skill acquisition">Practical skill acquisition</option>
+              <option value="Mastery">Complete Conceptual Mastery</option>
             </select>
           </div>
         </div>
@@ -139,7 +141,7 @@ export const OnboardingPage: React.FC = () => {
           <div className="space-y-2">
             <label className="text-xs font-semibold text-slate-300 flex items-center space-x-1.5">
               <Globe2 className="w-4 h-4 text-purple-400" />
-              <span>Preferred Language</span>
+              <span>Target Language</span>
             </label>
             <select
               value={profile.preferred_language}
@@ -163,12 +165,11 @@ export const OnboardingPage: React.FC = () => {
               onChange={(e: any) => setProfile({ ...profile, teaching_style: e.target.value })}
               className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-white text-sm focus:border-blue-500"
             >
-              <option value="Simple & Friendly">Simple & Friendly</option>
-              <option value="Visual">Visual Diagrams & Graphs</option>
+              <option value="Socratic">Socratic (Guiding Questions & Reflection)</option>
+              <option value="First Principles">First Principles (Fundamental Physics & Axioms)</option>
+              <option value="Project-Based">Project-Based (Hands-on Application)</option>
               <option value="Storytelling">Storytelling & Analogies</option>
-              <option value="Technical">Technical & Derivations</option>
-              <option value="Socratic">Socratic Questioning</option>
-              <option value="Exam-focused">Exam-focused & Traps</option>
+              <option value="Direct Instruction">Direct Instruction (Concise & Structured)</option>
             </select>
           </div>
         </div>
@@ -185,11 +186,11 @@ export const OnboardingPage: React.FC = () => {
               onChange={(e) => setProfile({ ...profile, available_time: e.target.value })}
               className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-white text-sm focus:border-blue-500"
             >
-              <option value="5 minutes">5 minutes (Quick summary)</option>
-              <option value="10 minutes">10 minutes</option>
-              <option value="20 minutes">20 minutes (Standard)</option>
-              <option value="30 minutes">30 minutes</option>
-              <option value="60 minutes">60 minutes (Deep Dive)</option>
+              <option value="15 minutes">15 minutes (Focused Session)</option>
+              <option value="30 minutes">30 minutes (Standard Session)</option>
+              <option value="45 minutes">45 minutes (Comprehensive)</option>
+              <option value="60 minutes">60 minutes (Deep Dive Workshop)</option>
+              <option value="90 minutes">90 minutes (Full Mastery Session)</option>
             </select>
           </div>
 
@@ -203,12 +204,14 @@ export const OnboardingPage: React.FC = () => {
               onChange={(e: any) => setProfile({ ...profile, desired_depth: e.target.value })}
               className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-white text-sm focus:border-blue-500"
             >
-              <option value="Quick">Quick Overview</option>
-              <option value="Balanced">Balanced Core + Examples</option>
-              <option value="Deep">Deep Comprehensive Derivation</option>
+              <option value="High-level overview">High-level overview</option>
+              <option value="Deep dive">Deep dive</option>
+              <option value="Mastery">Mastery</option>
+              <option value="Modular reference">Modular reference</option>
             </select>
           </div>
         </div>
+
 
         <button
           type="submit"

@@ -93,38 +93,84 @@ class LLMProvider:
         prompt_lower = prompt.lower()
         if "lesson plan" in prompt_lower or "curriculum" in prompt_lower:
             return json.dumps({
-                "title": "Interactive Fundamentals Lesson",
-                "objective": "Master key principles through interactive explanations, visual diagrams, and real-time conceptual questions.",
-                "estimated_minutes": 20,
-                "difficulty": "beginner",
+                "title": "Electricity & Ohm's Law — Tailored Lesson Plan",
+                "topic": "Electricity & Ohm's Law",
+                "objective": "Master foundational principles, governing equations, and practical circuit analysis of Ohm's Law.",
+                "overview": "This structured curriculum guides the learner from intuitive hydraulic analogies through quantitative mathematical derivation to real-world circuit diagnostics, ensuring deep conceptual mastery and practical problem-solving ability.",
+                "education_level": "Undergraduate",
+                "learning_goal": "Foundational understanding",
+                "teaching_style": "Socratic",
+                "available_time": "30 minutes",
+                "desired_depth": "Deep dive",
+                "estimated_minutes": 25,
+                "difficulty": "Undergraduate",
                 "sections": [
                     {
-                        "id": "section_1",
-                        "title": "Core Concepts & Fundamentals",
+                        "id": "sec_1",
+                        "title": "Section 1: Intuitive Physical Foundations & Core Variables",
                         "duration": 5,
-                        "explanation": "Welcome! Today we explore fundamental rules. Notice how variables interact under different conditions.",
-                        "concepts": ["Basic Definitions", "Core Principles"],
-                        "examples": ["Water flow analogy", "Simple electrical circuit"],
+                        "objective": "Build intuitive physical mental models of Voltage, Current, and Resistance using hydraulic analogies.",
+                        "explanation": "Welcome to our deep dive on Ohm's Law. Let us think from first principles: electric charge does not move spontaneously; it requires a potential difference (voltage) overcoming internal opposition (resistance).",
+                        "concepts": [
+                            "Potential Difference (Voltage): Electrical pressure driving electron movement through conductive paths",
+                            "Current Flow: Quantitative rate of charge displacement measured in Amperes",
+                            "Electrical Resistance: Material-level atomic opposition to current flow measured in Ohms"
+                        ],
+                        "guided_exercise": "Imagine a pressurized water pipe with an adjustable valve. Squeezing the valve represents increasing resistance.",
+                        "knowledge_check": "What happens to current when resistance increases while voltage remains constant?",
+                        "examples": ["Water pipe pressure and flow rate analogy"],
                         "visual_type": "graph",
                         "visual_data": {"title": "Voltage vs Current Curve", "x_label": "Current (I)", "y_label": "Voltage (V)"},
                         "question": "What happens to the current flowing through a circuit when resistance increases while voltage remains constant?",
                         "question_type": "conceptual",
-                        "expected_answer": "Current decreases because resistance opposes the flow of electrons."
+                        "expected_answer": "Current decreases inversely as resistance increases under constant voltage."
                     },
                     {
-                        "id": "section_2",
-                        "title": "Practical Application & Formula Derivation",
-                        "duration": 8,
-                        "explanation": "Let's translate principles into quantitative relationships using step-by-step mathematical reasoning.",
-                        "concepts": ["Formula Derivation", "Unit Conversions"],
-                        "examples": ["Calculating current in a 12V system with 4 Ohm resistor"],
+                        "id": "sec_2",
+                        "title": "Section 2: Mathematical Formulation & Quantitative Derivation",
+                        "duration": 12,
+                        "objective": "Derive and calculate exact numerical quantities using V = I × R across series and parallel loads.",
+                        "explanation": "Now we formulate the quantitative governing equation V = I × R. Notice how linearity governs ideal resistive elements.",
+                        "concepts": [
+                            "Governing Formula: V = I × R and its algebraic reformulations I = V / R and R = V / I",
+                            "Linear Proportionality: Direct relationship between Voltage and Current on V-I slope"
+                        ],
+                        "guided_exercise": "Compute the current in a 12V automotive battery circuit powering a 4 Ohm headlight lamp.",
+                        "knowledge_check": "If a circuit has a 12V supply and a 4 Ohm resistor, calculate the current in Amperes.",
+                        "examples": ["12V battery across 4 Ohm load yielding 3 Amperes"],
                         "visual_type": "equation",
                         "visual_data": {"equation": "V = I \\times R", "explanation": "Voltage equals Current multiplied by Resistance"},
                         "question": "If Voltage is 12V and Resistance is 4 Ohms, what is the Current?",
                         "question_type": "problem_solving",
                         "expected_answer": "3 Amperes (I = V / R = 12 / 4 = 3A)"
+                    },
+                    {
+                        "id": "sec_3",
+                        "title": "Section 3: Practical Circuit Application & Misconception Traps",
+                        "duration": 8,
+                        "objective": "Synthesize principles to troubleshoot real-world circuit anomalies and avoid common exam traps.",
+                        "explanation": "Let us examine real-world engineering constraints, thermal coefficient variations, and common diagnostic errors.",
+                        "concepts": [
+                            "Boundary Limits: Non-ohmic behavior in real filament lamps vs ideal resistors",
+                            "Diagnostic Analysis: Troubleshooting open-circuit and short-circuit failure modes"
+                        ],
+                        "guided_exercise": "Examine a multi-node schematic to predict voltage drop across series resistors.",
+                        "knowledge_check": "Why does a real light bulb filament exhibit a non-linear V-I curve as temperature rises?",
+                        "examples": ["Incandescent bulb dynamic resistance shift"],
+                        "visual_type": "diagram",
+                        "visual_data": {"title": "Circuit Diagnostic Flow"},
+                        "question": "In a series circuit, if one resistor increases in value, what happens to the total circuit current?",
+                        "question_type": "conceptual",
+                        "expected_answer": "Total current decreases across all components in the series loop."
                     }
-                ]
+                ],
+                "next_steps": {
+                    "immediate_action": "Complete the adaptive misconception check quiz on Ohm's Law.",
+                    "further_exploration": [
+                        "Investigate Kirchhoff's Voltage and Current Laws (KVL & KCL).",
+                        "Analyze AC circuits and impedance with inductive and capacitive loads."
+                    ]
+                }
             })
         elif "misconception" in prompt_lower or "evaluate" in prompt_lower:
             if "increase" in prompt_lower and ("resistance" in prompt_lower or "current" in prompt_lower):
