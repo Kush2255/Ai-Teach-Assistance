@@ -1,25 +1,29 @@
 export interface LearnerProfile {
   name: string;
-  education_level: 'Beginner' | 'Intermediate' | 'Advanced';
+  education_level: 'Beginner' | 'Intermediate' | 'Advanced' | string;
   current_knowledge?: string;
   learning_goal: string;
-  preferred_language: 'English' | 'Hindi' | 'Hinglish' | 'Telugu';
-  teaching_style: 'Simple & Friendly' | 'Visual' | 'Storytelling' | 'Technical' | 'Socratic' | 'Exam-focused';
+  preferred_language: 'English' | 'Hindi' | 'Hinglish' | 'Telugu' | string;
+  teaching_style: 'Simple & Friendly' | 'Visual' | 'Storytelling' | 'Technical' | 'Socratic' | 'Exam-focused' | string;
   available_time: string;
-  desired_depth: 'Quick' | 'Balanced' | 'Deep';
+  desired_depth: 'Quick' | 'Balanced' | 'Deep' | string;
 }
 
 export interface LessonSection {
   id: string;
   title: string;
   duration: number;
+  section_objective?: string;
   explanation?: string;
   concepts: string[];
   examples: string[];
-  visual_type: 'diagram' | 'equation' | 'graph' | 'code' | 'timeline' | 'concept_map';
+  guided_exercise?: string;
+  knowledge_check?: string[];
+  real_world_connection?: string;
+  visual_type: 'diagram' | 'equation' | 'graph' | 'code' | 'timeline' | 'concept_map' | string;
   visual_data?: any;
   question?: string;
-  question_type: 'conceptual' | 'problem_solving' | 'mcq';
+  question_type?: 'conceptual' | 'problem_solving' | 'mcq' | string;
   question_options?: string[];
   expected_answer?: string;
 }
@@ -29,10 +33,16 @@ export interface LessonPlan {
   title: string;
   topic: string;
   objective: string;
+  overview?: string;
   estimated_minutes: number;
   difficulty: string;
   language: string;
+  teaching_style?: string;
+  desired_depth?: string;
   sections: LessonSection[];
+  immediate_action?: string;
+  further_exploration?: string[];
+  markdown_curriculum?: string;
 }
 
 export interface AnswerEvaluation {
