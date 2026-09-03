@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, Flame, Award, TrendingUp, AlertTriangle, ArrowRight, Play } from 'lucide-react';
+import { BookOpen, Flame, Award, TrendingUp, AlertTriangle, ArrowRight, Sparkles } from 'lucide-react';
 import { fetchDashboardProgress, startDemoScenario } from '../services/api';
 
 export const DashboardPage: React.FC = () => {
@@ -41,73 +41,73 @@ export const DashboardPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
+    <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Welcome Banner */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-white">Student Dashboard</h1>
-          <p className="text-sm text-slate-400">Welcome back! Track your learning streak, scores, and active topics.</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Student Dashboard</h1>
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">Welcome back! Track your learning streak, scores, and active topics.</p>
         </div>
 
         <button
           onClick={handleLaunchDemo}
-          className="px-5 py-2.5 rounded-xl gradient-button text-xs font-bold shadow-lg flex items-center space-x-2"
+          className="px-5 py-2.5 rounded-xl primary-button text-xs font-bold shadow-md flex items-center space-x-2 cursor-pointer"
         >
-          <Play className="w-4 h-4 fill-white" />
+          <Sparkles className="w-4 h-4" />
           <span>Launch Electricity Demo Lesson</span>
         </button>
       </div>
 
       {/* KPI Metrics Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="glass-card p-6 rounded-3xl border border-slate-800 space-y-2">
-          <div className="flex items-center justify-between text-amber-400">
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-2">
+          <div className="flex items-center justify-between text-amber-500">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Learning Streak</span>
-            <Flame className="w-5 h-5 fill-amber-400 text-amber-400 animate-pulse" />
+            <Flame className="w-5 h-5 fill-amber-400 text-amber-500 animate-pulse" />
           </div>
-          <div className="text-3xl font-extrabold text-white">{data.streak_days} Days</div>
-          <p className="text-[10px] text-slate-400">Consistent daily study streak</p>
+          <div className="text-3xl font-extrabold text-slate-900">{data.streak_days} Days</div>
+          <p className="text-xs text-slate-500">Consistent daily study streak</p>
         </div>
 
-        <div className="glass-card p-6 rounded-3xl border border-slate-800 space-y-2">
-          <div className="flex items-center justify-between text-blue-400">
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-2">
+          <div className="flex items-center justify-between text-indigo-600">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Completed Lessons</span>
             <BookOpen className="w-5 h-5" />
           </div>
-          <div className="text-3xl font-extrabold text-white">{data.completed_lessons} / {data.total_lessons}</div>
-          <p className="text-[10px] text-slate-400">75% completion rate</p>
+          <div className="text-3xl font-extrabold text-slate-900">{data.completed_lessons} / {data.total_lessons}</div>
+          <p className="text-xs text-slate-500">75% completion rate</p>
         </div>
 
-        <div className="glass-card p-6 rounded-3xl border border-slate-800 space-y-2">
-          <div className="flex items-center justify-between text-emerald-400">
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-2">
+          <div className="flex items-center justify-between text-emerald-600">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Average Score</span>
             <Award className="w-5 h-5" />
           </div>
-          <div className="text-3xl font-extrabold text-white">{data.average_score}%</div>
-          <p className="text-[10px] text-slate-400">Across all assessment quizzes</p>
+          <div className="text-3xl font-extrabold text-slate-900">{data.average_score}%</div>
+          <p className="text-xs text-slate-500">Across all assessment quizzes</p>
         </div>
 
-        <div className="glass-card p-6 rounded-3xl border border-slate-800 space-y-2">
-          <div className="flex items-center justify-between text-indigo-400">
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-2">
+          <div className="flex items-center justify-between text-indigo-600">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Mastery Level</span>
             <TrendingUp className="w-5 h-5" />
           </div>
-          <div className="text-3xl font-extrabold text-white">Developing</div>
-          <p className="text-[10px] text-slate-400">Level 2 Educator Tier</p>
+          <div className="text-3xl font-extrabold text-slate-900">Developing</div>
+          <p className="text-xs text-slate-500">Level 2 Educator Tier</p>
         </div>
       </div>
 
       {/* Recommended Topics & Weak Areas */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="glass-panel p-6 rounded-3xl border border-indigo-500/30 space-y-4">
-          <h3 className="font-bold text-white text-base">Recommended Topics to Study Next</h3>
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+          <h3 className="font-bold text-slate-900 text-base">Recommended Topics to Study Next</h3>
           <div className="space-y-3">
             {data.recommended_topics.map((topic: string, idx: number) => (
-              <div key={idx} className="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between text-xs text-slate-200">
-                <span className="font-semibold">{topic}</span>
+              <div key={idx} className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between text-xs text-slate-700 hover:border-indigo-200 transition-all">
+                <span className="font-semibold text-slate-900">{topic}</span>
                 <button
                   onClick={() => navigate('/onboarding')}
-                  className="text-indigo-400 hover:text-indigo-300 font-bold flex items-center space-x-1"
+                  className="text-indigo-600 hover:text-indigo-700 font-bold flex items-center space-x-1 cursor-pointer"
                 >
                   <span>Start</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -117,15 +117,15 @@ export const DashboardPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="glass-panel p-6 rounded-3xl border border-amber-500/30 space-y-4">
-          <h3 className="font-bold text-white text-base flex items-center space-x-2">
-            <AlertTriangle className="w-4 h-4 text-amber-400" />
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+          <h3 className="font-bold text-slate-900 text-base flex items-center space-x-2">
+            <AlertTriangle className="w-4 h-4 text-amber-500" />
             <span>Target Weak Concepts</span>
           </h3>
           <div className="space-y-3">
             {data.weak_concepts.map((wc: string, idx: number) => (
-              <div key={idx} className="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 text-xs text-slate-300">
-                <span className="text-amber-400 font-semibold">Focus Area:</span> {wc}
+              <div key={idx} className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-700">
+                <span className="text-amber-600 font-semibold">Focus Area:</span> {wc}
               </div>
             ))}
           </div>

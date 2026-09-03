@@ -1,326 +1,363 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Clock, Play, Layers, Target, BookOpen, CheckCircle, Lightbulb, Compass, Copy, Check, Code2, Sparkles, ArrowRight } from 'lucide-react';
-import type { LessonPlan, LearnerProfile } from '../types';
+import {
+  Sparkles,
+  GraduationCap,
+  Target,
+  Compass,
+  Clock,
+  BarChart2,
+  Share2,
+  Download,
+  BookOpen,
+  User,
+  Zap,
+  Calculator,
+  Cpu,
+  HelpCircle,
+  Link as LinkIcon,
+  Play,
+  Lightbulb,
+  Edit3
+} from 'lucide-react';
+import type { LessonPlan } from '../types';
 
 export const LessonPlanPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'visual' | 'markdown'>('visual');
-  const [copied, setCopied] = useState(false);
-
-  const profile: LearnerProfile = location.state?.profile || {
-    name: 'Learner',
-    education_level: 'Undergraduate',
-    learning_goal: 'Foundational understanding',
-    preferred_language: 'English',
-    teaching_style: 'Socratic',
-    available_time: '30 minutes',
-    desired_depth: 'Deep dive',
-  };
+  const [activeCurriculumView, setActiveCurriculumView] = useState<'visual' | 'markdown'>('visual');
 
   const plan: LessonPlan = location.state?.plan || {
-    id: "lesson_default",
+    id: "demo_electricity_101",
     title: "Electricity & Ohm's Law — Tailored Lesson Plan",
     topic: "Electricity & Ohm's Law",
-    objective: "Master core principles, quantitative formulas, and practical applications of Ohm's Law.",
-    overview: "This structured curriculum guides the Undergraduate learner from intuitive foundational concepts through rigorous practical application to achieve Foundational understanding in Electricity & Ohm's Law.",
-    education_level: profile.education_level,
-    learning_goal: profile.learning_goal,
-    teaching_style: profile.teaching_style,
-    available_time: profile.available_time,
-    desired_depth: profile.desired_depth,
-    estimated_minutes: 25,
-    difficulty: profile.education_level,
-    language: profile.preferred_language,
+    objective: "Master Voltage, Current, and Resistance relationship with interactive visual demonstrations",
+    estimated_minutes: 30,
+    difficulty: "Undergraduate / College",
+    language: "English",
     sections: [
       {
         id: "sec_1",
         title: "Section 1: Intuitive Physical Foundations & Core Variables",
-        duration: 5,
-        objective: "Build intuitive physical mental models of Voltage, Current, and Resistance using hydraulic analogies.",
-        explanation: "Welcome! Today we are exploring Ohm's Law through first principles. Think of voltage as potential pressure and resistance as opposition to charge flow.",
-        concepts: [
-          "Potential Difference (Voltage): Electrical pressure driving electron movement through conductive paths",
-          "Current Flow: Quantitative rate of charge displacement measured in Amperes",
-          "Electrical Resistance: Material-level atomic opposition to current flow measured in Ohms"
-        ],
-        guided_exercise: "Imagine a pressurized water pipe with an adjustable valve. Squeezing the valve represents increasing resistance.",
-        knowledge_check: "What happens to current when resistance increases while voltage remains constant?",
-        examples: ["Water pressure and flow rate analogy"],
+        duration: 10,
+        concepts: ["Voltage as Potential Difference", "Current as Flow Rate", "Resistance as Opposition"],
+        examples: ["Water Pipe & Pump Analogy"],
         visual_type: "graph",
-        question: "What happens to the current flowing through a circuit when resistance increases while voltage remains constant?"
+        question_type: "conceptual",
+        question: "What happens to the current in a circuit when resistance increases while voltage is constant?",
+        expected_answer: "Current decreases because resistance opposes the flow of electric charge (I = V/R)."
       },
       {
         id: "sec_2",
-        title: "Section 2: Mathematical Formulation & Quantitative Analysis",
+        title: "Section 2: Mathematical Formulation & Quantitative Derivation",
         duration: 12,
-        objective: "Derive and calculate exact numerical quantities using V = I × R across series and parallel loads.",
-        explanation: "Now we formulate the quantitative governing equation V = I × R and analyze its linear slope.",
-        concepts: [
-          "Governing Formula: V = I × R and its algebraic reformulations I = V / R and R = V / I",
-          "Linear Proportionality: Direct relationship between Voltage and Current on V-I slope"
-        ],
-        guided_exercise: "Compute the current in a 12V automotive battery circuit powering a 4 Ohm headlight lamp.",
-        knowledge_check: "If Voltage is 12V and Resistance is 4 Ohms, what is Current I?",
-        examples: ["12V battery across 4 Ohm load yielding 3 Amperes"],
+        concepts: ["V = I × R Formulation", "Linear V-I Characteristics", "Slope as Resistance"],
+        examples: ["Automotive Headlamp Circuit (12V)"],
         visual_type: "equation",
-        question: "If V=12V and R=4 Ohms, what is Current I?"
+        question_type: "problem_solving",
+        question: "If a circuit is powered by a 12V supply and has a resistance of 4 Ohms, calculate the current I.",
+        expected_answer: "3 Amperes (I = V/R = 12/4 = 3A)"
       },
       {
         id: "sec_3",
-        title: "Section 3: Practical Circuit Application & Boundary Diagnostics",
+        title: "Section 3: Practical Circuit Application & Misconception Traps",
         duration: 8,
-        objective: "Synthesize principles to troubleshoot real-world circuit anomalies and avoid common exam traps.",
-        explanation: "Let us examine real-world engineering constraints, non-ideal components, and diagnostic procedures.",
-        concepts: [
-          "Boundary Limits: Non-ohmic behavior in real filament lamps vs ideal resistors",
-          "Diagnostic Analysis: Troubleshooting open-circuit and short-circuit failure modes"
-        ],
-        guided_exercise: "Examine a multi-node schematic to predict voltage drop across series resistors.",
-        knowledge_check: "Why does a real light bulb filament exhibit a non-linear V-I curve as temperature rises?",
-        examples: ["Incandescent bulb dynamic resistance shift"],
+        concepts: ["Internal Resistance", "Load Balancing", "Common Current Traps"],
+        examples: ["Household Electrical Outlets"],
         visual_type: "diagram",
-        question: "In a series circuit, if one resistor increases in value, what happens to total circuit current?"
+        question_type: "conceptual",
+        question: "Why does current not increase when you add more resistance in a standard circuit?",
+        expected_answer: "Current is inversely proportional to resistance according to Ohm's Law."
       }
-    ],
-    next_steps: {
-      immediate_action: "Complete the interactive misconception assessment quiz on Ohm's Law.",
-      further_exploration: [
-        "Investigate Kirchhoff's Voltage and Current Laws (KVL & KCL).",
-        "Analyze AC circuits and impedance with inductive and capacitive loads."
-      ]
-    }
+    ]
   };
 
   const handleStartLesson = () => {
     navigate(`/teach/${plan.id}`);
   };
 
-  const handleCopyMarkdown = () => {
-    if (plan.markdown_curriculum) {
-      navigator.clipboard.writeText(plan.markdown_curriculum);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
-
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8 space-y-8">
-      {/* Top Learner Profile Summary Banner */}
-      <div className="glass-panel p-8 rounded-3xl space-y-5 border border-blue-500/30 shadow-2xl relative overflow-hidden">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center space-x-2">
-            <span className="px-3 py-1 rounded-full bg-blue-950/80 text-blue-400 text-xs font-bold uppercase tracking-wider border border-blue-500/40">
-              {plan.education_level || profile.education_level} • {plan.language}
+    <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      {/* Curriculum Header */}
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+          <div className="space-y-1">
+            <span className="text-[11px] font-extrabold tracking-wider uppercase text-indigo-600 block">
+              EDUCATIONAL ARCHITECT CURRICULUM
             </span>
-            <span className="px-3 py-1 rounded-full bg-purple-950/80 text-purple-300 text-xs font-bold border border-purple-500/40">
-              {plan.teaching_style || profile.teaching_style} Style
-            </span>
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900">
+              {plan.title}
+            </h1>
           </div>
-          <div className="flex items-center space-x-2 text-xs text-slate-400 bg-slate-900/60 px-3 py-1.5 rounded-xl border border-slate-800">
-            <Clock className="w-4 h-4 text-cyan-400" />
-            <span>Total Time: <b>{plan.available_time || `${plan.estimated_minutes} Minutes`}</b></span>
-            <span className="text-slate-600">|</span>
-            <span>Depth: <b>{plan.desired_depth || profile.desired_depth}</b></span>
+
+          {/* Action Buttons */}
+          <div className="flex items-center space-x-2.5 self-start sm:self-auto">
+            <button
+              onClick={() => alert("Curriculum exported as PDF/JSON")}
+              className="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors shadow-sm cursor-pointer"
+            >
+              <Download className="w-3.5 h-3.5 text-slate-500" />
+              <span>Export</span>
+            </button>
+
+            <button
+              onClick={() => alert("Share link copied to clipboard")}
+              className="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors shadow-sm cursor-pointer"
+            >
+              <Share2 className="w-3.5 h-3.5 text-slate-500" />
+              <span>Share</span>
+            </button>
           </div>
         </div>
 
-        <div>
-          <span className="text-[11px] font-mono text-cyan-400 uppercase tracking-wider font-semibold">Educational Architect Curriculum</span>
-          <h1 className="text-3xl font-extrabold text-white mt-1">{plan.title}</h1>
-        </div>
+        {/* Badges Row */}
+        <div className="flex flex-wrap items-center gap-2 pt-1">
+          <span className="inline-flex items-center space-x-1 px-3 py-1 rounded-lg bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold">
+            <GraduationCap className="w-3.5 h-3.5" />
+            <span>Undergraduate / College</span>
+          </span>
 
-        {/* Learner Profile Summary Callout */}
-        <div className="bg-slate-950/60 border-l-4 border-indigo-500 p-4 rounded-r-xl space-y-1 text-xs text-slate-300">
-          <p className="font-bold text-indigo-300 flex items-center space-x-1.5">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Learner Profile Summary</span>
-          </p>
-          <p>
-            <b>Level & Goal:</b> {plan.education_level || profile.education_level} | {plan.learning_goal || profile.learning_goal}
-          </p>
-          <p>
-            <b>Format:</b> {plan.teaching_style || profile.teaching_style} Style | {plan.available_time || profile.available_time} Total | {plan.desired_depth || profile.desired_depth} Depth
-          </p>
-        </div>
+          <span className="inline-flex items-center space-x-1 px-3 py-1 rounded-lg bg-emerald-50 border border-emerald-100 text-emerald-700 text-xs font-semibold">
+            <Target className="w-3.5 h-3.5" />
+            <span>Foundational understanding</span>
+          </span>
 
-        {/* Curriculum Overview */}
-        {plan.overview && (
-          <div className="space-y-1 pt-1 border-t border-slate-800/80">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Curriculum Overview</h3>
-            <p className="text-sm text-slate-300 italic leading-relaxed">
-              "{plan.overview}"
-            </p>
-          </div>
-        )}
+          <span className="inline-flex items-center space-x-1 px-3 py-1 rounded-lg bg-amber-50 border border-amber-100 text-amber-700 text-xs font-semibold">
+            <Compass className="w-3.5 h-3.5" />
+            <span>Socratic Style</span>
+          </span>
+
+          <span className="inline-flex items-center space-x-1 px-3 py-1 rounded-lg bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold">
+            <Clock className="w-3.5 h-3.5" />
+            <span>{plan.estimated_minutes || 30} minutes</span>
+          </span>
+
+          <span className="inline-flex items-center space-x-1 px-3 py-1 rounded-lg bg-rose-50 border border-rose-100 text-rose-700 text-xs font-semibold">
+            <BarChart2 className="w-3.5 h-3.5" />
+            <span>Deep dive</span>
+          </span>
+        </div>
       </div>
 
-      {/* Tab Switcher: Interactive Visual vs Markdown Plan */}
-      <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={() => setActiveTab('visual')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center space-x-2 ${
-              activeTab === 'visual'
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20'
-                : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
-            }`}
-          >
-            <Layers className="w-4 h-4" />
-            <span>Visual Curriculum ({plan.sections.length} Sections)</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('markdown')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center space-x-2 ${
-              activeTab === 'markdown'
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20'
-                : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
-            }`}
-          >
-            <Code2 className="w-4 h-4" />
-            <span>Markdown Schema Output</span>
-          </button>
-        </div>
-
-        {activeTab === 'markdown' && plan.markdown_curriculum && (
-          <button
-            onClick={handleCopyMarkdown}
-            className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-700 flex items-center space-x-1.5 transition-all"
-          >
-            {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-            <span>{copied ? "Copied!" : "Copy Markdown"}</span>
-          </button>
-        )}
-      </div>
-
-      {/* Tab 1: Visual Sections View */}
-      {activeTab === 'visual' ? (
-        <div className="space-y-6">
-          <div className="space-y-4">
-            {plan.sections.map((sec, idx) => (
-              <div key={idx} className="glass-card p-6 rounded-2xl border border-slate-800 space-y-4 hover:border-slate-700 transition-all">
-                {/* Section Header */}
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
-                  <div className="space-y-1">
-                    <div className="flex items-center space-x-2">
-                      <span className="w-6 h-6 rounded-full bg-indigo-950 border border-indigo-500/40 text-indigo-300 font-bold flex items-center justify-center text-xs">
-                        #{idx + 1}
-                      </span>
-                      <h3 className="font-bold text-white text-lg">{sec.title}</h3>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2 text-xs">
-                    <span className="bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-800 text-indigo-300 font-mono text-[11px]">
-                      Visual: {sec.visual_type.toUpperCase()}
-                    </span>
-                    <span className="bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-800 text-cyan-300 font-medium">
-                      ⏱ {sec.duration} mins
-                    </span>
-                  </div>
-                </div>
-
-                {/* Section Objective */}
-                {sec.objective && (
-                  <div className="flex items-start space-x-2 text-xs text-emerald-300 bg-emerald-950/30 p-2.5 rounded-xl border border-emerald-500/20">
-                    <Target className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
-                    <span><b>Objective:</b> {sec.objective}</span>
-                  </div>
-                )}
-
-                {/* 1. Key Concepts */}
-                <div className="space-y-2">
-                  <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
-                    <BookOpen className="w-3.5 h-3.5 text-blue-400" />
-                    <span>1. Key Concepts</span>
-                  </h4>
-                  <ul className="space-y-1.5 text-xs text-slate-300 pl-2">
-                    {sec.concepts.map((concept, cIdx) => (
-                      <li key={cIdx} className="flex items-start space-x-2">
-                        <span className="text-blue-400 font-bold mt-0.5">•</span>
-                        <span>{concept}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* 2. Guided Exercise / Example */}
-                {(sec.guided_exercise || (sec.examples && sec.examples.length > 0)) && (
-                  <div className="space-y-2">
-                    <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
-                      <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
-                      <span>2. Guided Exercise / Example</span>
-                    </h4>
-                    <div className="bg-slate-950/70 p-3 rounded-xl border border-slate-800 text-xs text-amber-200/90 leading-relaxed">
-                      {sec.guided_exercise || sec.examples.join('; ')}
-                    </div>
-                  </div>
-                )}
-
-                {/* 3. Knowledge Check & Reflection */}
-                {(sec.knowledge_check || sec.question) && (
-                  <div className="space-y-2">
-                    <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
-                      <CheckCircle className="w-3.5 h-3.5 text-purple-400" />
-                      <span>3. Knowledge Check & Reflection</span>
-                    </h4>
-                    <div className="bg-purple-950/20 p-3 rounded-xl border border-purple-500/20 text-xs text-purple-200 font-medium">
-                      {sec.knowledge_check || sec.question}
-                    </div>
-                  </div>
-                )}
+      {/* Two-Column Curriculum Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Left Column (4 cols): Profile Summary, Overview & Session Summary */}
+        <div className="lg:col-span-4 space-y-5">
+          {/* 1. Learner Profile Summary */}
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-3.5">
+            <div className="flex items-center space-x-2 text-slate-900 font-bold text-sm">
+              <div className="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                <User className="w-4 h-4" />
               </div>
-            ))}
-          </div>
+              <span>Learner Profile Summary</span>
+            </div>
 
-          {/* Next Steps & Practice Roadmap */}
-          {plan.next_steps && (
-            <div className="glass-panel p-6 rounded-2xl border border-emerald-500/30 space-y-4">
-              <h3 className="text-base font-bold text-white flex items-center space-x-2">
-                <Compass className="w-5 h-5 text-emerald-400" />
-                <span>Next Steps & Practice Roadmap</span>
-              </h3>
-              
-              <div className="space-y-2 text-xs">
-                <div className="flex items-start space-x-2">
-                  <span className="font-bold text-emerald-300 whitespace-nowrap">Immediate Action:</span>
-                  <span className="text-slate-300">{plan.next_steps.immediate_action}</span>
-                </div>
-
-                {plan.next_steps.further_exploration && plan.next_steps.further_exploration.length > 0 && (
-                  <div className="space-y-1 pt-1">
-                    <span className="font-bold text-emerald-300">Further Exploration:</span>
-                    <ul className="pl-4 space-y-1 text-slate-300 list-disc">
-                      {plan.next_steps.further_exploration.map((item, idx) => (
-                        <li key={idx}>{item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+            <div className="space-y-2 text-xs text-slate-600 divide-y divide-slate-100">
+              <div className="pt-1">
+                <span className="font-semibold text-slate-800">Level & Goal: </span>
+                <span>Undergraduate / College | Foundational understanding</span>
+              </div>
+              <div className="pt-2">
+                <span className="font-semibold text-slate-800">Format: </span>
+                <span>Socratic Style</span>
+              </div>
+              <div className="pt-2">
+                <span className="font-semibold text-slate-800">Total Time: </span>
+                <span>{plan.estimated_minutes || 30} minutes</span>
+              </div>
+              <div className="pt-2">
+                <span className="font-semibold text-slate-800">Depth: </span>
+                <span>Deep dive</span>
               </div>
             </div>
-          )}
-        </div>
-      ) : (
-        /* Tab 2: Raw Markdown View */
-        <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
-          <pre className="bg-slate-950 p-6 rounded-xl text-slate-200 text-xs font-mono whitespace-pre-wrap leading-relaxed overflow-x-auto border border-slate-800">
-            {plan.markdown_curriculum || "# No raw markdown generated"}
-          </pre>
-        </div>
-      )}
+          </div>
 
-      {/* Launch CTA */}
-      <button
-        onClick={handleStartLesson}
-        className="w-full py-4 rounded-2xl gradient-button text-base font-bold shadow-2xl flex items-center justify-center space-x-3 transition-transform hover:scale-[1.01]"
-      >
-        <Play className="w-5 h-5 fill-white" />
-        <span>Launch Interactive AI Video Lesson</span>
-        <ArrowRight className="w-5 h-5" />
-      </button>
+          {/* 2. Curriculum Overview */}
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-4">
+            <div className="flex items-center space-x-2 text-slate-900 font-bold text-sm">
+              <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                <BookOpen className="w-4 h-4" />
+              </div>
+              <span>Curriculum Overview</span>
+            </div>
+
+            <p className="text-xs text-slate-600 leading-relaxed">
+              This structured curriculum uses intuitive physical analogies and quantitative derivation to build a deep, lasting understanding of Ohm's Law and its real-world applications.
+            </p>
+
+            {/* View Toggle Buttons */}
+            <div className="flex items-center space-x-2 pt-1">
+              <button
+                type="button"
+                onClick={() => setActiveCurriculumView('visual')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  activeCurriculumView === 'visual'
+                    ? 'bg-indigo-600 text-white shadow-sm'
+                    : 'border border-slate-200 text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                <span>&lt;/&gt; Visual Curriculum</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveCurriculumView('markdown')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  activeCurriculumView === 'markdown'
+                    ? 'bg-indigo-600 text-white shadow-sm'
+                    : 'border border-slate-200 text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                <span>&lt;/&gt; Markdown Output</span>
+              </button>
+            </div>
+          </div>
+
+          {/* 3. Session Summary with 100% Circle Progress */}
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 flex items-center justify-between">
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2 text-slate-900 font-bold text-sm">
+                <Clock className="w-4 h-4 text-indigo-600" />
+                <span>Session Summary</span>
+              </div>
+              <div className="flex items-center space-x-6 text-xs text-slate-600">
+                <div>
+                  <span className="block text-slate-400 text-[10px] uppercase font-bold">Total Time</span>
+                  <span className="font-bold text-slate-800 text-sm">{plan.estimated_minutes || 30} minutes</span>
+                </div>
+                <div>
+                  <span className="block text-slate-400 text-[10px] uppercase font-bold">Sections</span>
+                  <span className="font-bold text-slate-800 text-sm">{plan.sections.length || 3}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Circular Gauge */}
+            <div className="relative w-14 h-14 flex items-center justify-center">
+              <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                <path
+                  className="text-slate-100"
+                  strokeWidth="3.5"
+                  stroke="currentColor"
+                  fill="none"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <path
+                  className="text-emerald-500"
+                  strokeDasharray="100, 100"
+                  strokeWidth="3.5"
+                  strokeLinecap="round"
+                  stroke="currentColor"
+                  fill="none"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+              </svg>
+              <span className="absolute text-xs font-bold text-slate-800">100%</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column (8 cols): Curriculum Section Cards */}
+        <div className="lg:col-span-8 space-y-4">
+          {plan.sections.map((sec, idx) => {
+            const num = (idx + 1).toString().padStart(2, '0');
+            const icons = [
+              <Zap key="1" className="w-4 h-4 fill-current" />,
+              <Calculator key="2" className="w-4 h-4" />,
+              <Cpu key="3" className="w-4 h-4" />
+            ];
+            const colors = [
+              { badge: 'bg-indigo-600', iconBg: 'bg-indigo-50 text-indigo-600', hover: 'hover:border-indigo-200' },
+              { badge: 'bg-blue-600', iconBg: 'bg-blue-50 text-blue-600', hover: 'hover:border-blue-200' },
+              { badge: 'bg-emerald-600', iconBg: 'bg-emerald-50 text-emerald-600', hover: 'hover:border-emerald-200' }
+            ];
+            const style = colors[idx % colors.length];
+
+            return (
+              <div
+                key={sec.id || idx}
+                className={`bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-3.5 ${style.hover} transition-all`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <span className={`w-7 h-7 rounded-md ${style.badge} text-white font-bold text-xs flex items-center justify-center`}>
+                      {num}
+                    </span>
+                    <div className={`w-8 h-8 rounded-full ${style.iconBg} flex items-center justify-center`}>
+                      {icons[idx % icons.length]}
+                    </div>
+                    <h3 className="font-bold text-slate-900 text-sm sm:text-base">
+                      {sec.title}
+                    </h3>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <span className="px-2.5 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-semibold border border-blue-100">
+                      ⏱ {sec.duration || 10} min
+                    </span>
+                  </div>
+                </div>
+
+                {/* Tag Badges */}
+                <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
+                  <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-amber-50/80 border border-amber-100 text-slate-700">
+                    <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
+                    <span className="font-semibold text-slate-900">Key Concepts</span>
+                    <span className="text-slate-500">{sec.concepts?.length || 3} Topics</span>
+                  </div>
+
+                  <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-blue-50/80 border border-blue-100 text-slate-700">
+                    <Edit3 className="w-3.5 h-3.5 text-blue-500" />
+                    <span className="font-semibold text-slate-900">Guided Exercise</span>
+                    <span className="text-slate-500">{sec.examples?.[0] || 'Interactive Exercise'}</span>
+                  </div>
+
+                  <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-purple-50/80 border border-purple-100 text-slate-700">
+                    <HelpCircle className="w-3.5 h-3.5 text-purple-500" />
+                    <span className="font-semibold text-slate-900">Knowledge Check</span>
+                    <span className="text-slate-500">2 Questions</span>
+                  </div>
+
+                  <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-cyan-50/80 border border-cyan-100 text-slate-700">
+                    <LinkIcon className="w-3.5 h-3.5 text-cyan-500" />
+                    <span className="font-semibold text-slate-900">Real-world Connection</span>
+                    <span className="text-slate-500">Applied Engineering</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+
+          {/* Next Steps & Practice Roadmap Card */}
+          <div className="bg-slate-50/80 rounded-2xl border border-slate-200/80 p-4 sm:p-5 space-y-2">
+            <div className="flex items-center space-x-2 text-indigo-700 font-bold text-xs">
+              <Sparkles className="w-4 h-4" />
+              <span>Next Steps & Practice Roadmap</span>
+            </div>
+            <div className="text-xs text-slate-600 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <span className="font-semibold text-slate-800">Immediate Action: </span>
+                <span>Solve 5 Ohm's Law problems from real circuits.</span>
+              </div>
+              <div className="text-[11px] text-slate-500">
+                <span className="font-semibold text-slate-700">Further Exploration: </span>
+                <span>• Kirchhoff's Laws • Series & Parallel Circuits • Power & Energy</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Launch Interactive AI Classroom Button */}
+          <div className="pt-2">
+            <button
+              onClick={handleStartLesson}
+              className="w-full py-4 rounded-xl primary-button font-bold text-sm sm:text-base flex items-center justify-center space-x-3 shadow-lg cursor-pointer"
+            >
+              <Play className="w-5 h-5 fill-current" />
+              <span>Launch Interactive AI Video Lesson</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
-

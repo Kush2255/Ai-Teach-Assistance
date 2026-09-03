@@ -3,13 +3,13 @@ from typing import List, Optional, Dict, Any
 
 class LearnerProfileSchema(BaseModel):
     name: str = "Learner"
-    education_level: str = "Undergraduate" # Elementary, High School, Undergraduate, Professional, Self-Taught
+    education_level: str = "Beginner" # Beginner, Intermediate, Advanced
     current_knowledge: Optional[str] = ""
-    learning_goal: str = "Foundational understanding" # Exam preparation, practical skill acquisition, foundational understanding, mastery
+    learning_goal: str = "Understand fundamentals"
     preferred_language: str = "English" # English, Hindi, Hinglish, Telugu
-    teaching_style: str = "Socratic" # Socratic, First Principles, Project-Based, Storytelling, Direct Instruction, Simple & Friendly, Visual, Technical, Exam-focused
-    available_time: str = "30 minutes"
-    desired_depth: str = "Deep dive" # High-level overview, Deep dive, Mastery, Modular reference
+    teaching_style: str = "Simple & Friendly" # Simple & Friendly, Visual, Storytelling, Technical, Socratic, Exam-focused
+    available_time: str = "20 minutes"
+    desired_depth: str = "Balanced" # Quick, Balanced, Deep
 
 class LessonPlanRequest(BaseModel):
     topic: Optional[str] = "Electricity & Ohm's Law"
@@ -19,12 +19,9 @@ class LessonPlanRequest(BaseModel):
 class SectionSchema(BaseModel):
     id: str
     title: str
-    duration: int = 5
-    objective: Optional[str] = None
+    duration: int = 4
     explanation: Optional[str] = None
     concepts: List[str] = []
-    guided_exercise: Optional[str] = None
-    knowledge_check: Optional[str] = None
     examples: List[str] = []
     visual_type: str = "diagram"
     visual_data: Optional[Dict[str, Any]] = None
@@ -37,20 +34,11 @@ class LessonPlanResponse(BaseModel):
     id: str
     title: str
     topic: str
-    objective: Optional[str] = None
-    overview: Optional[str] = None
-    education_level: Optional[str] = None
-    learning_goal: Optional[str] = None
-    teaching_style: Optional[str] = None
-    available_time: Optional[str] = None
-    desired_depth: Optional[str] = None
-    estimated_minutes: int = 20
-    difficulty: str = "Undergraduate"
-    language: str = "English"
+    objective: str
+    estimated_minutes: int
+    difficulty: str
+    language: str
     sections: List[SectionSchema]
-    next_steps: Optional[Dict[str, Any]] = None
-    markdown_curriculum: Optional[str] = None
-
 
 class AnswerSubmissionRequest(BaseModel):
     section_id: str
