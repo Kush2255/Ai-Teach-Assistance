@@ -12,7 +12,7 @@ interface EquationProps {
 }
 
 export const EquationRenderer: React.FC<EquationProps> = ({ data }) => {
-  const eqStr = data.latex || data.equation || "V = I × R";
+  const eqStr = data.latex || data.equation || "y = f(x)";
 
   return (
     <div className="bg-slate-900/90 border border-indigo-500/30 rounded-2xl p-6 shadow-xl space-y-6">

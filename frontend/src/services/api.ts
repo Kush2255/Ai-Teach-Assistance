@@ -1,4 +1,4 @@
-import type { LearnerProfile, LessonPlan, AnswerEvaluation, AssessmentReport } from '../types';
+import type { LearnerProfile, LessonPlan, AnswerEvaluation, AssessmentReport, LearningContextApiResponse } from '../types';
 
 const API_BASE = 'http://localhost:8000/api';
 
@@ -12,26 +12,71 @@ export async function uploadDocument(file: File) {
   });
 
   if (!response.ok) {
-    const err = await response.json();
+    const err = await response.json().catch(() => ({ detail: 'Upload failed' }));
     throw new Error(err.detail || 'Failed to upload document');
   }
 
   return response.json();
 }
 
-export async function createLessonPlan(topic: string, profile: LearnerProfile, documentId?: string): Promise<LessonPlan> {
+/**
+ * Workflow 2: AI Understanding Layer.
+ *
+ * Sends learner profile + optional document_id to the backend understanding engine.
+ * Returns a structured LearningContext that captures the AI's understanding of
+ * the learner, topic, and any uploaded educational material.
+ */
+export async function understandLearnerContext(
+  topic: string,
+  profile: LearnerProfile,
+  documentId?: string,
+): Promise<LearningContextApiResponse> {
+  const response = await fetch(`${API_BASE}/lessons/understand`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      topic,
+      education_level: profile.education_level,
+      learning_goal: profile.learning_goal,
+      preferred_language: profile.preferred_language,
+      teaching_style: profile.teaching_style,
+      available_time: profile.available_time,
+      desired_depth: profile.desired_depth,
+      current_knowledge: profile.current_knowledge,
+      document_id: documentId,
+    }),
+  });
+
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({ detail: 'Understanding failed' }));
+    throw new Error(err.detail || 'AI understanding failed. Please try again.');
+  }
+
+  return response.json();
+}
+
+export async function createLessonPlan(
+  topic: string,
+  profile: LearnerProfile,
+  documentId?: string,
+  sessionId?: string,
+  learningContext?: any
+): Promise<LessonPlan> {
   const response = await fetch(`${API_BASE}/lessons/create`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       topic,
       document_id: documentId,
+      session_id: sessionId,
       profile,
+      learning_context: learningContext,
     }),
   });
 
   if (!response.ok) {
-    throw new Error('Failed to generate lesson plan');
+    const err = await response.json().catch(() => ({ detail: 'Failed to generate lesson plan' }));
+    throw new Error(err.detail || 'Failed to generate lesson plan');
   }
 
   return response.json();

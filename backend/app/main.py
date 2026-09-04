@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.config import settings
 from app.database import engine, Base
-from app.api import routes_documents, routes_lessons, routes_student, routes_demo
+from app.api import routes_documents, routes_lessons, routes_student, routes_demo, routes_classroom
 
 # Initialize SQLite Database tables
 Base.metadata.create_all(bind=engine)
@@ -33,6 +33,7 @@ app.mount("/static/audio", StaticFiles(directory=audio_dir), name="static_audio"
 # Include API Routers
 app.include_router(routes_documents.router)
 app.include_router(routes_lessons.router)
+app.include_router(routes_classroom.router)
 app.include_router(routes_student.router)
 app.include_router(routes_demo.router)
 

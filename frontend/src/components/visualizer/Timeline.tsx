@@ -9,10 +9,10 @@ interface TimelineProps {
 }
 
 export const Timeline: React.FC<TimelineProps> = ({ data }) => {
-  const events = data.events || [
-    { year: '1800', event: 'Alessandro Volta invents the chemical battery.' },
-    { year: '1827', event: "Georg Ohm formulates Ohm's Law V = I × R." },
-    { year: '1897', event: 'J.J. Thomson discovers the electron charge carrier.' },
+  const events = data.events && data.events.length > 0 ? data.events : [
+    { year: 'Step 1', event: 'Foundations established and early observations recorded.' },
+    { year: 'Step 2', event: 'Key theories and principles developed.' },
+    { year: 'Step 3', event: 'Modern applications and practical use cases emerged.' },
   ];
 
   return (

@@ -119,3 +119,27 @@ class LearningPath(Base):
     subject = Column(String, nullable=False)
     modules = Column(JSON, default=list) # [{id, title, status, score, description}]
     created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class LearningSession(Base):
+    """
+    Persists the LearningContext produced by Workflow 2.
+
+    Connects the workflow chain:
+      Learner Setup → Learning Context → Lesson Plan → Classroom
+    """
+    __tablename__ = "learning_sessions"
+
+    id = Column(String, primary_key=True)  # session_id from LearningContext
+    topic = Column(String, nullable=False)
+    education_level = Column(String, nullable=True)
+    learning_goal = Column(String, nullable=True)
+    language = Column(String, default="English")
+    teaching_style = Column(String, nullable=True)
+    available_time_minutes = Column(Integer, default=30)
+    desired_depth = Column(String, nullable=True)
+    document_id = Column(String, nullable=True)  # FK to documents if uploaded
+    source_type = Column(String, default="topic")  # "uploaded_material" | "topic"
+    learning_context_json = Column(JSON, default=dict)  # full LearningContext serialized
+    lesson_id = Column(String, ForeignKey("lessons.id"), nullable=True)  # linked when lesson created
+    created_at = Column(DateTime, default=datetime.utcnow)

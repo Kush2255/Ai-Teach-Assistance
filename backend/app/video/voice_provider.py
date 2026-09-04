@@ -19,6 +19,8 @@ class VoiceProvider:
             lang_code = "hi"
         elif language == "Telugu":
             lang_code = "te"
+        elif language == "Hinglish":
+            lang_code = "hi"
 
         filename = f"voice_{uuid.uuid4().hex[:8]}.mp3"
         filepath = os.path.join(self.audio_dir, filename)

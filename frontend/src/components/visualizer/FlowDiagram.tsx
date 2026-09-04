@@ -9,10 +9,10 @@ interface FlowProps {
 }
 
 export const FlowDiagram: React.FC<FlowProps> = ({ data }) => {
-  const steps = data.steps || [
-    { step: 1, title: 'Energy Potential', description: 'Voltage source creates electric field potential.' },
-    { step: 2, title: 'Charge Drift', description: 'Free electrons drift across the conductor.' },
-    { step: 3, title: 'Resistive Opposition', description: 'Collisions with lattice atoms cause energy dissipation.' },
+  const steps = data.steps && data.steps.length > 0 ? data.steps : [
+    { step: 1, title: 'Foundation', description: 'Establish key principles and definitions.' },
+    { step: 2, title: 'Analysis', description: 'Examine the relationships between key variables.' },
+    { step: 3, title: 'Application', description: 'Apply concepts to real-world scenarios.' },
   ];
 
   return (

@@ -10,10 +10,10 @@ interface ConceptMapProps {
 }
 
 export const ConceptMap: React.FC<ConceptMapProps> = ({ data }) => {
-  const nodes = data.nodes || [
-    { id: 'c1', label: 'Voltage (V)', category: 'Cause' },
-    { id: 'c2', label: 'Current (I)', category: 'Effect' },
-    { id: 'c3', label: 'Resistance (R)', category: 'Moderator' },
+  const nodes = data.nodes && data.nodes.length > 0 ? data.nodes : [
+    { id: 'c1', label: 'Core Concept', category: 'Foundation' },
+    { id: 'c2', label: 'Key Variable', category: 'Component' },
+    { id: 'c3', label: 'Governing Relationship', category: 'Law/Rule' },
   ];
 
   return (

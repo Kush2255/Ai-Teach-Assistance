@@ -16,3 +16,4 @@ class VideoGenerator:
         }
 
 video_generator = VideoGenerator()
+

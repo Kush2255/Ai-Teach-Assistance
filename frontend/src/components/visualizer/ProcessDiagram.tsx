@@ -9,10 +9,10 @@ interface ProcessProps {
 }
 
 export const ProcessDiagram: React.FC<ProcessProps> = ({ data }) => {
-  const steps = data.steps || [
-    { step: 1, title: "Potential Difference", description: "Source creates electrical pressure." },
-    { step: 2, title: "Carrier Movement", description: "Electrons migrate through circuit matrix." },
-    { step: 3, title: "Thermal Dissipation", description: "Collisions with resistor lattice generate heat energy." }
+  const steps = data.steps && data.steps.length > 0 ? data.steps : [
+    { step: 1, title: "Input", description: "Receive the primary inputs for this process." },
+    { step: 2, title: "Processing", description: "Apply the core transformations and logic." },
+    { step: 3, title: "Output", description: "Produce the final result or observable outcome." }
   ];
 
   return (

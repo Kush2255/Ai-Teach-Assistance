@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Sparkles,
@@ -25,10 +25,16 @@ import {
   Lightbulb,
   Edit3,
   Copy,
-  Check
+  Check,
+  Brain,
+  Search,
+  Database,
+  Layers,
+  AlertCircle,
+  X as XIcon,
 } from 'lucide-react';
-import type { LearnerProfile, LessonPlan } from '../types';
-import { createLessonPlan, uploadDocument } from '../services/api';
+import type { LearnerProfile, LessonPlan, UnderstandingStage, LearningContextApiResponse } from '../types';
+import { createLessonPlan, uploadDocument, understandLearnerContext } from '../services/api';
 
 export const OnboardingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -36,9 +42,16 @@ export const OnboardingPage: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [documentId, setDocumentId] = useState<string | undefined>(undefined);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [activeCurriculumView, setActiveCurriculumView] = useState<'visual' | 'markdown'>('visual');
   const [copied, setCopied] = useState(false);
+
+  // Workflow 2: Understanding state
+  const [understandingStages, setUnderstandingStages] = useState<UnderstandingStage[]>([]);
+  const [isUnderstanding, setIsUnderstanding] = useState(false);
+  const [understandingError, setUnderstandingError] = useState<string | null>(null);
+  const [learningContextResponse, setLearningContextResponse] = useState<LearningContextApiResponse | null>(null);
 
   const [profile, setProfile] = useState<LearnerProfile>({
     name: 'Learner',
@@ -213,23 +226,132 @@ export const OnboardingPage: React.FC = () => {
   const [currentPlan, setCurrentPlan] = useState<LessonPlan>(defaultPlan);
 
   const handleFileUpload = async (file: File) => {
+    // Validate file type
+    const ext = file.name.split('.').pop()?.toLowerCase();
+    if (!['pdf', 'docx', 'pptx', 'txt', 'doc', 'ppt'].includes(ext || '')) {
+      setUploadError('Unsupported file format. Please upload PDF, DOCX, PPTX, or TXT.');
+      return;
+    }
+    if (file.size > 20 * 1024 * 1024) {
+      setUploadError('File is too large. Maximum size is 20MB.');
+      return;
+    }
     setSelectedFile(file);
+    setUploadError(null);
     setIsUploading(true);
     try {
       const res = await uploadDocument(file);
       setDocumentId(res.document_id);
-    } catch (e) {
-      console.error('File upload failed:', e);
+    } catch (e: any) {
+      setUploadError(e.message || 'File upload failed. You can continue with topic-based learning.');
+      setDocumentId(undefined);
     } finally {
       setIsUploading(false);
     }
   };
 
+  // Helper: update a single stage's status
+  const updateStage = useCallback(
+    (id: string, status: UnderstandingStage['status']) => {
+      setUnderstandingStages(prev =>
+        prev.map(s => s.id === id ? { ...s, status } : s)
+      );
+    },
+    []
+  );
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Input validation
+    if (!topic.trim()) {
+      setUnderstandingError('Please enter a topic to continue.');
+      return;
+    }
+
     setIsGenerating(true);
+    setIsUnderstanding(true);
+    setUnderstandingError(null);
+    setLearningContextResponse(null);
+
+    // Initialize stages — document stage only shown if file is uploaded
+    const hasDocument = Boolean(documentId);
+    const stages: UnderstandingStage[] = [
+      {
+        id: 'profile',
+        label: 'Understanding your learner profile',
+        description: 'Analyzing education level, goals, and learning style',
+        status: 'active',
+      },
+      {
+        id: 'goal',
+        label: 'Identifying your learning goal',
+        description: 'Mapping goal to appropriate pedagogical strategy',
+        status: 'pending',
+      },
+      {
+        id: 'topic',
+        label: 'Analyzing the topic',
+        description: 'Identifying core concepts, prerequisites, and relationships',
+        status: 'pending',
+      },
+      ...(hasDocument ? [{
+        id: 'rag',
+        label: 'Reviewing your uploaded material',
+        description: 'Extracting and retrieving relevant content from your document',
+        status: 'pending' as UnderstandingStage['status'],
+      }] : []),
+      {
+        id: 'context',
+        label: 'Building your learning context',
+        description: 'Assembling structured context for the lesson planner',
+        status: 'pending',
+      },
+    ];
+    setUnderstandingStages(stages);
+
+    // Scroll to progress panel
+    setTimeout(() => {
+      document.getElementById('understanding-panel')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
+
     try {
-      const plan = await createLessonPlan(topic, profile, documentId);
+      // --- PHASE 1: Profile understood ---
+      await new Promise(r => setTimeout(r, 300)); // brief visual pause
+      updateStage('profile', 'done');
+      updateStage('goal', 'active');
+
+      await new Promise(r => setTimeout(r, 400));
+      updateStage('goal', 'done');
+      updateStage('topic', 'active');
+
+      if (hasDocument) {
+        await new Promise(r => setTimeout(r, 400));
+        updateStage('topic', 'done');
+        updateStage('rag', 'active');
+      }
+
+      // --- PHASE 2: Call the AI Understanding API ---
+      updateStage('context', 'active');
+      const contextResponse = await understandLearnerContext(topic, profile, documentId);
+
+      // Mark remaining stages done
+      if (hasDocument) updateStage('rag', 'done');
+      else updateStage('topic', 'done');
+      updateStage('context', 'done');
+
+      setLearningContextResponse(contextResponse);
+      setIsUnderstanding(false);
+
+      // --- PHASE 3: Lesson Plan generation (Workflow 3 hand-off) ---
+      const plan = await createLessonPlan(
+        contextResponse.learning_context.topic,
+        profile,
+        documentId,
+        contextResponse.session_id,
+        contextResponse.learning_context,
+      );
+
       setCurrentPlan(plan);
       setTimeout(() => {
         const curriculumEl = document.getElementById('curriculum-section');
@@ -237,8 +359,14 @@ export const OnboardingPage: React.FC = () => {
           curriculumEl.scrollIntoView({ behavior: 'smooth' });
         }
       }, 100);
-    } catch (e) {
-      console.error('Lesson plan creation failed:', e);
+    } catch (e: any) {
+      const message = e.message || 'Something went wrong. Please try again.';
+      setUnderstandingError(message);
+      setIsUnderstanding(false);
+      // Mark the last active stage as error
+      setUnderstandingStages(prev =>
+        prev.map(s => s.status === 'active' ? { ...s, status: 'error' } : s)
+      );
     } finally {
       setIsGenerating(false);
     }
@@ -263,8 +391,24 @@ export const OnboardingPage: React.FC = () => {
     document.body.removeChild(link);
   };
 
-  const handleStartClassroom = () => {
-    navigate(`/teach/${currentPlan.id || 'demo_electricity_101'}`);
+  const handleStartClassroom = async () => {
+    let lessonId = currentPlan.id;
+    // If still using the default demo plan (not generated from backend),
+    // call /api/demo/start first to register it in the backend cache.
+    if (!lessonId || lessonId === 'lesson_demo_default') {
+      try {
+        const res = await fetch('http://localhost:8000/api/demo/start', { method: 'POST' });
+        if (res.ok) {
+          const data = await res.json();
+          lessonId = data.demo_lesson_id || 'demo_electricity_101';
+        } else {
+          lessonId = 'demo_electricity_101';
+        }
+      } catch {
+        lessonId = 'demo_electricity_101';
+      }
+    }
+    navigate(`/teach/${lessonId}`);
   };
 
   return (
@@ -481,12 +625,24 @@ export const OnboardingPage: React.FC = () => {
           <div className="pt-2 space-y-3">
             <button
               type="submit"
-              disabled={isGenerating}
-              className="w-full py-3.5 rounded-xl primary-button font-bold text-sm sm:text-base flex items-center justify-center space-x-2 shadow-md cursor-pointer transition-all"
+              disabled={isGenerating || isUploading}
+              className="w-full py-3.5 rounded-xl primary-button font-bold text-sm sm:text-base flex items-center justify-center space-x-2 shadow-md cursor-pointer transition-all disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              <Sparkles className="w-4 h-4" />
-              <span>{isGenerating ? "Synthesizing Curriculum with Educational Architect..." : "Generate Personalized Lesson Plan"}</span>
-              <ChevronRight className="w-4 h-4" />
+              {isGenerating ? (
+                <>
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  <span>AI Teacher is preparing your lesson...</span>
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-4 h-4" />
+                  <span>Generate Personalized Lesson Plan</span>
+                  <ChevronRight className="w-4 h-4" />
+                </>
+              )}
             </button>
 
             {/* Footer Security Note */}
@@ -496,6 +652,150 @@ export const OnboardingPage: React.FC = () => {
             </p>
           </div>
         </form>
+
+        {/* ── UNDERSTANDING PROGRESS PANEL ── */}
+        {(isUnderstanding || understandingStages.length > 0) && (
+          <div
+            id="understanding-panel"
+            className="mt-6 rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50/60 to-slate-50/80 p-5 sm:p-6 space-y-4"
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2.5">
+                <div className="w-8 h-8 rounded-xl bg-indigo-100 flex items-center justify-center">
+                  <Brain className="w-4 h-4 text-indigo-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-slate-900">AI Teacher Preparation</p>
+                  <p className="text-[11px] text-slate-500">Understanding you before teaching</p>
+                </div>
+              </div>
+              {isUnderstanding && (
+                <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-indigo-100 text-indigo-700 text-[11px] font-semibold animate-pulse">
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 inline-block"></span>
+                  <span>Processing</span>
+                </span>
+              )}
+              {!isUnderstanding && !understandingError && understandingStages.length > 0 && (
+                <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 text-[11px] font-semibold">
+                  <Check className="w-3 h-3" />
+                  <span>Complete</span>
+                </span>
+              )}
+            </div>
+
+            {/* Stage List */}
+            <div className="space-y-2">
+              {understandingStages.map((stage) => {
+                const stageIcons: Record<string, React.ReactNode> = {
+                  profile: <User className="w-3.5 h-3.5" />,
+                  goal: <Target className="w-3.5 h-3.5" />,
+                  topic: <Search className="w-3.5 h-3.5" />,
+                  rag: <Database className="w-3.5 h-3.5" />,
+                  context: <Layers className="w-3.5 h-3.5" />,
+                };
+
+                return (
+                  <div key={stage.id} className="flex items-center space-x-3">
+                    {/* Status icon */}
+                    <div
+                      className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 transition-all ${
+                        stage.status === 'done'
+                          ? 'bg-emerald-100 text-emerald-600'
+                          : stage.status === 'active'
+                          ? 'bg-indigo-100 text-indigo-600 animate-pulse'
+                          : stage.status === 'error'
+                          ? 'bg-red-100 text-red-500'
+                          : 'bg-slate-100 text-slate-400'
+                      }`}
+                    >
+                      {stage.status === 'done' && <Check className="w-3.5 h-3.5" />}
+                      {stage.status === 'active' && (
+                        <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24" fill="none">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                      )}
+                      {stage.status === 'error' && <XIcon className="w-3 h-3" />}
+                      {stage.status === 'pending' && stageIcons[stage.id]}
+                    </div>
+
+                    {/* Stage text */}
+                    <div className="flex-1 min-w-0">
+                      <p
+                        className={`text-xs font-semibold truncate ${
+                          stage.status === 'done'
+                            ? 'text-emerald-700'
+                            : stage.status === 'active'
+                            ? 'text-indigo-700'
+                            : stage.status === 'error'
+                            ? 'text-red-600'
+                            : 'text-slate-400'
+                        }`}
+                      >
+                        {stage.label}
+                      </p>
+                      {stage.status === 'active' && (
+                        <p className="text-[10px] text-slate-500 truncate">{stage.description}</p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Source type badge */}
+            {learningContextResponse && (
+              <div className="flex items-center space-x-2 pt-1 border-t border-indigo-100">
+                <span className={`inline-flex items-center space-x-1 px-2.5 py-1 rounded-full text-[11px] font-semibold border ${
+                  learningContextResponse.source_type === 'uploaded_material'
+                    ? 'bg-blue-50 border-blue-100 text-blue-700'
+                    : 'bg-slate-50 border-slate-100 text-slate-600'
+                }`}>
+                  {learningContextResponse.source_type === 'uploaded_material'
+                    ? <><Database className="w-3 h-3" /><span>Document-grounded</span></>
+                    : <><Brain className="w-3 h-3" /><span>Topic knowledge</span></>}
+                </span>
+                {learningContextResponse.core_concepts_count > 0 && (
+                  <span className="text-[11px] text-slate-500">
+                    {learningContextResponse.core_concepts_count} concepts identified
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Error state */}
+            {understandingError && (
+              <div className="flex items-start space-x-2.5 p-3 rounded-xl bg-red-50 border border-red-100">
+                <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold text-red-700">Something went wrong</p>
+                  <p className="text-[11px] text-red-600 mt-0.5">{understandingError}</p>
+                  {documentId && (
+                    <button
+                      type="button"
+                      onClick={() => { setDocumentId(undefined); setSelectedFile(null); setUploadError(null); }}
+                      className="mt-1.5 text-[11px] text-red-600 underline font-medium cursor-pointer"
+                    >
+                      Remove document and try again with topic only
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Upload error */}
+        {uploadError && (
+          <div className="flex items-start space-x-2 p-3 rounded-xl bg-amber-50 border border-amber-100 mt-3">
+            <AlertCircle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-xs text-amber-700 font-medium">{uploadError}</p>
+              <p className="text-[11px] text-amber-600 mt-0.5">You can continue without the document.</p>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* ----------------- SECTION 2: EDUCATIONAL ARCHITECT CURRICULUM ----------------- */}

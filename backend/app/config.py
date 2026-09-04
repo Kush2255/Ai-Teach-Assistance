@@ -13,9 +13,13 @@ class Settings(BaseSettings):
     # LLM API Keys
     GEMINI_API_KEY: Optional[str] = None
     OPENAI_API_KEY: Optional[str] = None
-    DEFAULT_LLM_PROVIDER: str = "gemini"
+    GROK_API_KEY: Optional[str] = None       # Groq (api.groq.com) — gsk_ prefix keys
+    DEFAULT_LLM_PROVIDER: str = "gemini"     # gemini-3.6-flash confirmed working
     
-    # Video Avatar API Keys
+    # Video Avatar API Keys & Providers
+    AI_TEACHER_PROVIDER: str = "mock"       # mock, heygen, did, streaming
+    AI_TEACHER_API_KEY: Optional[str] = None
+    AI_TEACHER_AVATAR_ID: Optional[str] = "default_educator"
     HEYGEN_API_KEY: Optional[str] = None
     DID_API_KEY: Optional[str] = None
     

@@ -13,11 +13,11 @@ interface GraphProps {
 }
 
 export const GraphRenderer: React.FC<GraphProps> = ({ data }) => {
-  const chartData = data.series || [
-    { x: 1, y: 4, label: 'Point A' },
-    { x: 2, y: 8, label: 'Point B' },
-    { x: 3, y: 12, label: 'Point C' },
-    { x: 4, y: 16, label: 'Point D' },
+  const chartData = data.series && data.series.length > 0 ? data.series : [
+    { x: 1, y: 2, label: 'Point A' },
+    { x: 2, y: 4, label: 'Point B' },
+    { x: 3, y: 6, label: 'Point C' },
+    { x: 4, y: 8, label: 'Point D' },
   ];
 
   return (
@@ -48,7 +48,7 @@ export const GraphRenderer: React.FC<GraphProps> = ({ data }) => {
       </div>
 
       <div className="bg-slate-950/60 p-3 rounded-xl border border-slate-800 text-xs text-slate-300 flex items-center justify-between">
-        <span>💡 <b>Teacher Insight:</b> Notice the linear slope represents constant Resistance R (Slope = ΔV / ΔI).</span>
+        <span>💡 <b>Teacher Insight:</b> {data.formula ? `The formula ${data.formula} describes this relationship. Observe how the variables interact along this curve.` : 'Observe how the variables interact along this curve and identify the trend.'}</span>
       </div>
     </div>
   );
