@@ -1,6 +1,10 @@
 import type { LearnerProfile, LessonPlan, AnswerEvaluation, AssessmentReport, LearningContextApiResponse } from '../types';
 
-export const BACKEND_URL = (import.meta.env.VITE_API_URL || 'http://localhost:8000').replace(/\/$/, '');
+let rawUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+if (rawUrl && !rawUrl.startsWith('http://') && !rawUrl.startsWith('https://')) {
+  rawUrl = `https://${rawUrl}`;
+}
+export const BACKEND_URL = rawUrl.replace(/\/$/, '');
 export const API_BASE = `${BACKEND_URL}/api`;
 
 export async function uploadDocument(file: File) {
