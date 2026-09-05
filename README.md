@@ -18,10 +18,12 @@ UNDERSTAND ➔ PLAN ➔ EXPLAIN ➔ DEMONSTRATE ➔ QUESTION ➔ EVALUATE ➔ AD
 
 ---
 
-## 🌟 Key Capabilities & Architectural Highlights
+## 🌟 3D System Architecture Flow
+
+![AI Teacher 3D Architecture](docs/ai_teacher_3d_architecture.jpg)
 
 ```
-                                      AI TEACHER ARCHITECTURE
+                                      AI TEACHER 3D ARCHITECTURE
                                       
     [ Upload Material / Topic ] ─────► [ RAG / Knowledge Grounding ]
                                                   │
