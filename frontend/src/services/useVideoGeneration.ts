@@ -7,8 +7,9 @@
  */
 
 import { useState, useRef, useCallback } from 'react';
+import { BACKEND_URL, API_BASE as ROOT_API_BASE } from './api';
 
-const API_BASE = 'http://localhost:8000/api/video';
+const API_BASE = `${ROOT_API_BASE}/video`;
 
 export interface VideoGenerationParams {
   lessonId: string;
@@ -138,8 +139,8 @@ export function useVideoGeneration() {
               isComplete: true,
               progress: 100,
               progressStep: '✅ Video ready!',
-              videoUrl: status.video_url ? `http://localhost:8000${status.video_url}` : null,
-              downloadUrl: status.download_url ? `http://localhost:8000${status.download_url}` : null,
+              videoUrl: status.video_url ? `${BACKEND_URL}${status.video_url}` : null,
+              downloadUrl: status.download_url ? `${BACKEND_URL}${status.download_url}` : null,
               durationSeconds: status.duration_seconds,
               sceneCount: status.scene_count,
               hasAudio: status.has_audio || false,

@@ -34,7 +34,7 @@ import {
   X as XIcon,
 } from 'lucide-react';
 import type { LearnerProfile, LessonPlan, UnderstandingStage, LearningContextApiResponse } from '../types';
-import { createLessonPlan, uploadDocument, understandLearnerContext } from '../services/api';
+import { createLessonPlan, uploadDocument, understandLearnerContext, API_BASE } from '../services/api';
 
 export const OnboardingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -393,11 +393,9 @@ export const OnboardingPage: React.FC = () => {
 
   const handleStartClassroom = async () => {
     let lessonId = currentPlan.id;
-    // If still using the default demo plan (not generated from backend),
-    // call /api/demo/start first to register it in the backend cache.
     if (!lessonId || lessonId === 'lesson_demo_default') {
       try {
-        const res = await fetch('http://localhost:8000/api/demo/start', { method: 'POST' });
+        const res = await fetch(`${API_BASE}/demo/start`, { method: 'POST' });
         if (res.ok) {
           const data = await res.json();
           lessonId = data.demo_lesson_id || 'demo_electricity_101';

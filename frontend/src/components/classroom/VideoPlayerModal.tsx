@@ -315,8 +315,8 @@ export const VideoPlayerModal: React.FC<VideoPlayerModalProps> = ({
                   {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
                 </button>
 
-                <button onClick={handleFullscreen} className="text-slate-400 hover:text-white transition-colors cursor-pointer">
-                  <Maximize2 className="w-4 h-4" />
+                <button onClick={handleFullscreen} className="text-slate-400 hover:text-white transition-colors cursor-pointer" title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}>
+                  <Maximize2 className={`w-4 h-4 ${isFullscreen ? 'text-indigo-400' : ''}`} />
                 </button>
               </div>
             </div>

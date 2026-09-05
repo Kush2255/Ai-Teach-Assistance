@@ -28,6 +28,7 @@ import {
   Brain
 } from 'lucide-react';
 import type { LessonPlan } from '../types';
+import { API_BASE } from '../services/api';
 
 export const LessonPlanPage: React.FC = () => {
   const location = useLocation();
@@ -119,7 +120,7 @@ export const LessonPlanPage: React.FC = () => {
     let lessonId = plan.id;
     if (!lessonId || lessonId === 'demo_electricity_101') {
       try {
-        const res = await fetch('http://localhost:8000/api/demo/start', { method: 'POST' });
+        const res = await fetch(`${API_BASE}/demo/start`, { method: 'POST' });
         if (res.ok) {
           const data = await res.json();
           lessonId = data.demo_lesson_id || 'demo_electricity_101';

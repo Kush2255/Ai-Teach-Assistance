@@ -10,8 +10,6 @@ import {
   Maximize2,
   Minimize2,
   BookOpen,
-  Lightbulb,
-  BarChart2,
   AlignLeft,
   CheckCircle,
 } from 'lucide-react';
@@ -643,7 +641,6 @@ export const TeachingVideoPlayer: React.FC<TeachingVideoPlayerProps> = ({
 
   const [selectedTeacherIndex, setSelectedTeacherIndex] = useState(0);
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1.0);
-  const [showChapterMenu, setShowChapterMenu] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showCaptions, setShowCaptions] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -666,7 +663,7 @@ export const TeachingVideoPlayer: React.FC<TeachingVideoPlayerProps> = ({
   const teacherVideoSrc =
     activeTeacher.videoUrl ||
     videoData.video_url ||
-    videoData.teacher_profile?.video_url ||
+    (videoData as any).teacher_profile?.video_url ||
     '/assets/real_ai_teacher.mp4';
 
   // Sync teacher video element with isPlaying state and playback speed
@@ -927,10 +924,10 @@ export const TeachingVideoPlayer: React.FC<TeachingVideoPlayerProps> = ({
           <div className="bg-slate-950/90 backdrop-blur-md border border-slate-700/80 rounded-xl px-3 py-1.5 mb-1 shadow-lg">
             <div className="flex items-center space-x-1.5">
               <span className="w-2 h-2 rounded-full bg-indigo-400" />
-              <p className="text-xs font-bold text-white">{videoData.teacher_profile?.name || 'Dr. Sarah Adams'}</p>
+              <p className="text-xs font-bold text-white">{(videoData as any).teacher_profile?.name || 'Dr. Sarah Adams'}</p>
             </div>
             <p className="text-[10px] text-indigo-300/90 font-medium">
-              {videoData.teacher_profile?.role || 'Holographic AI Master Instructor'}
+              {(videoData as any).teacher_profile?.role || 'Holographic AI Master Instructor'}
             </p>
           </div>
         </div>

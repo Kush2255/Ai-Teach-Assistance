@@ -1,4 +1,5 @@
-const API_BASE = 'http://localhost:8000/api/classroom';
+import { API_BASE as ROOT_API_BASE } from './api';
+const API_BASE = `${ROOT_API_BASE}/classroom`;
 
 export interface VideoScene {
   scene_id: string;
