@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { GraduationCap, Play, LayoutDashboard, Compass, FolderOpen, Bell, Sparkles } from 'lucide-react';
+import { Play, LayoutDashboard, Compass, FolderOpen, Bell, Sparkles } from 'lucide-react';
 import { startDemoScenario } from '../../services/api';
 
 export const Navbar: React.FC = () => {
@@ -35,8 +35,8 @@ export const Navbar: React.FC = () => {
       <div className="max-w-[1600px] mx-auto flex items-center justify-between">
         {/* Brand Logo */}
         <Link to="/" className="flex items-center space-x-3 group">
-          <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-md shadow-indigo-500/30 group-hover:scale-105 transition-transform">
-            <GraduationCap className="w-6 h-6 text-white" />
+          <div className="w-10 h-10 rounded-xl overflow-hidden border border-indigo-500/40 bg-slate-950 flex items-center justify-center shadow-md shadow-indigo-500/30 group-hover:scale-105 group-hover:border-indigo-400 transition-all">
+            <img src="/assets/ai_teacher_logo.png" alt="AI Teacher Logo" className="w-full h-full object-cover" />
           </div>
           <div>
             <span className={`text-lg font-extrabold tracking-tight block leading-tight ${
@@ -44,7 +44,7 @@ export const Navbar: React.FC = () => {
             }`}>
               AI TEACHER
             </span>
-            <span className="block text-[11px] font-medium tracking-wide text-slate-400">
+            <span className="block text-[11px] font-medium tracking-wide text-indigo-400">
               Adaptive Educator
             </span>
           </div>
