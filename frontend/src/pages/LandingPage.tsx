@@ -20,7 +20,17 @@ export const LandingPage: React.FC = () => {
   return (
     <div className="space-y-20 pb-20">
       {/* Hero Banner */}
-      <section className="relative pt-16 pb-12 text-center max-w-5xl mx-auto px-4 space-y-8">
+      <section className="relative pt-12 pb-12 text-center max-w-5xl mx-auto px-4 space-y-8">
+        {/* Floating Brand Emblem */}
+        <div className="flex justify-center">
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-3xl blur-xl opacity-70 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
+            <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-3xl overflow-hidden border-2 border-indigo-400/50 bg-slate-950 p-1.5 shadow-2xl">
+              <img src="/assets/ai_teacher_logo.png" alt="AI Teacher Brand Emblem" className="w-full h-full object-cover rounded-2xl" />
+            </div>
+          </div>
+        </div>
+
         <div className="inline-flex items-center space-x-2 bg-indigo-950/80 border border-indigo-500/40 px-4 py-1.5 rounded-full text-xs font-semibold text-indigo-300 shadow-xl">
           <Sparkles className="w-4 h-4 text-indigo-400 animate-pulse" />
           <span>AI Educator — Hackathon 2026 Innovation</span>
