@@ -4,6 +4,9 @@
 > **Challenge Title**: *AI Teacher: Build a Human-Like AI Educator That Teaches Through Video*  
 > **Status**: ✅ **100% Feature Complete & Production-Ready** (Task 1 Video Generation Engine + Task 2 Interactive Adaptive Classroom)
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Kush2255/Ai-Teach-Assistance)
+[![CI/CD Auto-Deploy](https://github.com/Kush2255/Ai-Teach-Assistance/actions/workflows/deploy.yml/badge.svg)](https://github.com/Kush2255/Ai-Teach-Assistance/actions)
+
 ---
 
 ## 📖 Problem Statement & Solution Overview
