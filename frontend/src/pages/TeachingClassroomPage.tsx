@@ -36,10 +36,16 @@ import { SectionNavigator } from '../components/classroom/SectionNavigator';
 import { LessonProgressBar } from '../components/classroom/LessonProgressBar';
 import { VideoGenerationLoader } from '../components/classroom/VideoGenerationLoader';
 import { TeachingVideoPlayer } from '../components/classroom/TeachingVideoPlayer';
+import { VideoPlayerModal } from '../components/classroom/VideoPlayerModal';
+import { useVideoGeneration } from '../services/useVideoGeneration';
 
 export const TeachingClassroomPage: React.FC = () => {
   const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
+
+  // Video Generation Hook (MP4 Pipeline)
+  const videoGen = useVideoGeneration();
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   // Classroom Session State
   const [session, setSession] = useState<ClassroomSessionState | null>(null);
@@ -335,6 +341,19 @@ export const TeachingClassroomPage: React.FC = () => {
     );
   }
 
+  const handleOpenVideoModal = () => {
+    setIsVideoModalOpen(true);
+    if (!videoGen.isGenerating && !videoGen.isComplete && session) {
+      videoGen.generateVideo({
+        lessonId: lessonId || 'lesson_1',
+        topic: session.topic,
+        language: currentLanguage,
+        teachingStyle: session.teaching_style,
+        sections: session.sections_summary,
+      });
+    }
+  };
+
   return (
     <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
       {/* Top Classroom Control Header */}
@@ -351,6 +370,8 @@ export const TeachingClassroomPage: React.FC = () => {
         isMuted={isMuted}
         onToggleMute={() => setIsMuted(!isMuted)}
         teachingStyle={session.teaching_style}
+        onOpenVideoModal={handleOpenVideoModal}
+        isGeneratingVideo={videoGen.isGenerating}
       />
 
       {/* Mode Switcher & Lesson Progress Bar */}
@@ -375,6 +396,12 @@ export const TeachingClassroomPage: React.FC = () => {
             }`}
           >
             <span>🔬 Interactive Micro-Stage</span>
+          </button>
+          <button
+            onClick={handleOpenVideoModal}
+            className="px-3 py-1.5 rounded-xl font-bold text-xs flex items-center space-x-1.5 transition-all cursor-pointer bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-md"
+          >
+            <span>🎥 {videoGen.isComplete ? 'Watch / Download MP4' : 'Render Full MP4'}</span>
           </button>
         </div>
 
@@ -548,6 +575,24 @@ export const TeachingClassroomPage: React.FC = () => {
           </button>
         </form>
       </div>
+
+      {/* Full Lesson Video Generator & MP4 Player Modal */}
+      <VideoPlayerModal
+        isOpen={isVideoModalOpen}
+        onClose={() => setIsVideoModalOpen(false)}
+        isGenerating={videoGen.isGenerating}
+        progress={videoGen.progress}
+        progressStep={videoGen.progressStep}
+        sceneCount={videoGen.sceneCount}
+        isComplete={videoGen.isComplete}
+        videoUrl={videoGen.videoUrl}
+        downloadUrl={videoGen.downloadUrl}
+        durationSeconds={videoGen.durationSeconds}
+        hasAudio={videoGen.hasAudio}
+        error={videoGen.error}
+        topic={session.topic}
+        language={currentLanguage}
+      />
     </div>
   );
 };

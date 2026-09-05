@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.config import settings
 from app.database import engine, Base
-from app.api import routes_documents, routes_lessons, routes_student, routes_demo, routes_classroom
+from app.api import routes_documents, routes_lessons, routes_student, routes_demo, routes_classroom, routes_video
 
 # Initialize SQLite Database tables
 Base.metadata.create_all(bind=engine)
@@ -30,12 +30,18 @@ audio_dir = os.path.join(settings.DATA_DIR, "audio")
 os.makedirs(audio_dir, exist_ok=True)
 app.mount("/static/audio", StaticFiles(directory=audio_dir), name="static_audio")
 
+# Mount static video directory for generated lesson MP4 files
+video_dir = os.path.join(settings.DATA_DIR, "video")
+os.makedirs(video_dir, exist_ok=True)
+app.mount("/static/video", StaticFiles(directory=video_dir), name="static_video")
+
 # Include API Routers
 app.include_router(routes_documents.router)
 app.include_router(routes_lessons.router)
 app.include_router(routes_classroom.router)
 app.include_router(routes_student.router)
 app.include_router(routes_demo.router)
+app.include_router(routes_video.router)
 
 @app.get("/")
 async def root():

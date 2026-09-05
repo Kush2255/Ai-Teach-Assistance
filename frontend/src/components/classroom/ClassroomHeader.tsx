@@ -15,6 +15,8 @@ interface ClassroomHeaderProps {
   isMuted: boolean;
   onToggleMute: () => void;
   teachingStyle?: string;
+  onOpenVideoModal?: () => void;
+  isGeneratingVideo?: boolean;
 }
 
 export const ClassroomHeader: React.FC<ClassroomHeaderProps> = ({
@@ -30,6 +32,8 @@ export const ClassroomHeader: React.FC<ClassroomHeaderProps> = ({
   isMuted,
   onToggleMute,
   teachingStyle = 'Visual',
+  onOpenVideoModal,
+  isGeneratingVideo = false,
 }) => {
   const navigate = useNavigate();
 
@@ -64,8 +68,24 @@ export const ClassroomHeader: React.FC<ClassroomHeaderProps> = ({
         </div>
       </div>
 
-      {/* Right: Language switch + Audio toggle + Quiz jump */}
+      {/* Right: Video Button + Language switch + Audio toggle + Quiz jump */}
       <div className="flex items-center space-x-2.5">
+        {/* Video Generation / Player Button */}
+        {onOpenVideoModal && (
+          <button
+            onClick={onOpenVideoModal}
+            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer ${
+              isGeneratingVideo
+                ? 'bg-amber-500 text-white animate-pulse'
+                : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white'
+            }`}
+            title="Generate or download full MP4 lesson video"
+          >
+            <span>🎬</span>
+            <span className="hidden sm:inline">{isGeneratingVideo ? 'Generating MP4...' : 'Lesson Video (MP4)'}</span>
+          </button>
+        )}
+
         {/* Language selector */}
         <div className="flex items-center space-x-1.5 text-xs text-slate-700 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">
           <Globe2 className="w-3.5 h-3.5 text-indigo-600" />
@@ -98,7 +118,7 @@ export const ClassroomHeader: React.FC<ClassroomHeaderProps> = ({
           className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition-all cursor-pointer"
         >
           <Award className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Final Quiz</span>
+          <span className="hidden sm:inline">Take Quiz</span>
         </button>
       </div>
     </div>
